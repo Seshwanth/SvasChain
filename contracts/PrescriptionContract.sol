@@ -447,4 +447,8 @@ contract PrescriptionContract {
         return patientActiveDrugs[patient];
     }
 
+    function getRole(address account) external view returns(uint256){
+        return uint256(roles[account]);
+    }
+
 }

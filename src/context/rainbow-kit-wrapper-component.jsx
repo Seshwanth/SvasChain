@@ -1,3 +1,5 @@
+'use client'
+
 import '@rainbow-me/rainbowkit/styles.css';
 import {
   getDefaultConfig,
@@ -6,6 +8,8 @@ import {
 import { WagmiProvider } from 'wagmi';
 import {
   polygonAmoy,
+  sepolia,
+  localhost,
 } from 'wagmi/chains';
 import {
   QueryClientProvider,
@@ -26,7 +30,7 @@ export const useWallet = () => useContext(WalletContext);
 const config = getDefaultConfig({
   appName: 'SvasChain',
   projectId: 'YOUR_PROJECT_ID',
-  chains: [polygonAmoy],
+  chains: [polygonAmoy, sepolia, localhost],
   ssr: true,
 });
 

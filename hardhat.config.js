@@ -10,7 +10,7 @@ module.exports = {
   defaultNetwork: "hardhat",
   networks: {
     hardhat: {
-      chainId: 31337,
+      chainId: 1337,
       blockConfirmations: 1,
     },
     sepolia: {
