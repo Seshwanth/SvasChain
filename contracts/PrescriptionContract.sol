@@ -19,12 +19,16 @@ error InvalidMedIndex(uint index, uint length);
 error AlreadyOrdered(uint prescriptionId, uint medIndex);
 error InvalidPharmacyId(uint index, uint length);
 
-
 contract PrescriptionContract {
-    
     // Defining Roles
-    enum Role { None, Doctor, Patient, Pharmacy, PharmaceuticalCompany }
-    mapping(address => Role ) public roles;
+    enum Role {
+        None,
+        Doctor,
+        Patient,
+        Pharmacy,
+        PharmaceuticalCompany
+    }
+    mapping(address => Role) public roles;
 
     //Storing all the pharmacies also fuck you, index is id for pharmacies
     address[] public pharmacies;
@@ -32,7 +36,7 @@ contract PrescriptionContract {
 
     // Defining modifiers
     modifier onlyDoctor() {
-        if(roles[msg.sender] != Role.Doctor){
+        if (roles[msg.sender] != Role.Doctor) {
             revert NotDoctor({
                 role: uint256(roles[msg.sender]),
                 account: msg.sender
@@ -42,7 +46,7 @@ contract PrescriptionContract {
     }
 
     modifier onlyPatient() {
-        if(roles[msg.sender] != Role.Patient){
+        if (roles[msg.sender] != Role.Patient) {
             revert NotPatient({
                 role: uint256(roles[msg.sender]),
                 account: msg.sender
@@ -52,7 +56,7 @@ contract PrescriptionContract {
     }
 
     modifier onlyPharmacy() {
-        if(roles[msg.sender] != Role.Pharmacy){
+        if (roles[msg.sender] != Role.Pharmacy) {
             revert NotPharmacy({
                 role: uint256(roles[msg.sender]),
                 account: msg.sender
@@ -112,19 +116,32 @@ contract PrescriptionContract {
     mapping(address => mapping(uint => InventoryItem)) public inventory;
     mapping(address => uint[]) private pharmacyDrugIds;
 
-
     //Events for logs and shit
 
     event Registered(address indexed account, Role role);
-    event PrescriptionCreated(uint indexed prescriptionId, address indexed doctor, address indexed patient);
-    event PrescriptionAccepted(uint indexed prescriptionId, address indexed patient);
-    event OrderPlaced(uint indexed prescriptionId, address indexed patient, address indexed pharmacy);
-    event MultiOrderPlaced(uint indexed prescriptionId, address indexed patient);
+    event PrescriptionCreated(
+        uint indexed prescriptionId,
+        address indexed doctor,
+        address indexed patient
+    );
+    event PrescriptionAccepted(
+        uint indexed prescriptionId,
+        address indexed patient
+    );
+    event OrderPlaced(
+        uint indexed prescriptionId,
+        address indexed patient,
+        address indexed pharmacy
+    );
+    event MultiOrderPlaced(
+        uint indexed prescriptionId,
+        address indexed patient
+    );
 
     // Functions to Register Roles
     /// @notice All are external
     function registerAsDoctor() external {
-        if( roles[msg.sender] != Role.None ){
+        if (roles[msg.sender] != Role.None) {
             revert AlreadyRegistered(msg.sender, uint256(roles[msg.sender]));
         }
         roles[msg.sender] = Role.Doctor;
@@ -132,7 +149,7 @@ contract PrescriptionContract {
     }
 
     function registerAsPatient() external {
-        if( roles[msg.sender] != Role.None ){
+        if (roles[msg.sender] != Role.None) {
             revert AlreadyRegistered(msg.sender, uint256(roles[msg.sender]));
         }
         roles[msg.sender] = Role.Patient;
@@ -140,7 +157,7 @@ contract PrescriptionContract {
     }
 
     function registerAsPharmacy() external {
-        if( roles[msg.sender] != Role.None ){
+        if (roles[msg.sender] != Role.None) {
             revert AlreadyRegistered(msg.sender, uint256(roles[msg.sender]));
         }
         roles[msg.sender] = Role.Pharmacy;
@@ -152,11 +169,11 @@ contract PrescriptionContract {
     }
 
     function registerAsPharmaceuticalCompany() external {
-        if (roles[msg.sender] != Role.None) revert AlreadyRegistered(msg.sender, uint256(roles[msg.sender]));
+        if (roles[msg.sender] != Role.None)
+            revert AlreadyRegistered(msg.sender, uint256(roles[msg.sender]));
         roles[msg.sender] = Role.PharmaceuticalCompany;
         emit Registered(msg.sender, roles[msg.sender]);
     }
-
 
     // Inventory Management
 
@@ -179,11 +196,15 @@ contract PrescriptionContract {
     /// @param drugIds - array of drugIds
     /// @param stocks - stock for each drugId
     // adding expiration dates
-    function setInventory(uint[] calldata drugIds, uint[] calldata stocks, uint[] calldata expirations) external onlyPharmacy {
-        if(drugIds.length != stocks.length){
+    function setInventory(
+        uint[] calldata drugIds,
+        uint[] calldata stocks,
+        uint[] calldata expirations
+    ) external onlyPharmacy {
+        if (drugIds.length != stocks.length) {
             revert MismatchLengths();
         }
-        for (uint i=0;i<drugIds.length;i++){
+        for (uint i = 0; i < drugIds.length; i++) {
             inventory[msg.sender][drugIds[i]] = InventoryItem({
                 stock: stocks[i],
                 expiration: expirations[i]
@@ -194,14 +215,26 @@ contract PrescriptionContract {
 
     /// @notice update the inventroy of a stock
     // adding expiration dates to this as well
-    function updateInventory(uint drugId, uint amount, uint newExpiration) external onlyPharmacy {
+    function updateInventory(
+        uint drugId,
+        uint amount,
+        uint newExpiration
+    ) external onlyPharmacy {
         inventory[msg.sender][drugId].stock += amount;
         inventory[msg.sender][drugId].expiration = newExpiration;
         _addDrugIdForPharmacy(msg.sender, drugId);
     }
 
-    function updatePharmacyInventory(address pharmacy, uint drugId, uint amount, uint expiration ) external {
-        require(roles[msg.sender] == Role.PharmaceuticalCompany, "Unauthorized");
+    function updatePharmacyInventory(
+        address pharmacy,
+        uint drugId,
+        uint amount,
+        uint expiration
+    ) external {
+        require(
+            roles[msg.sender] == Role.PharmaceuticalCompany,
+            "Unauthorized"
+        );
         inventory[pharmacy][drugId].stock += amount;
         inventory[pharmacy][drugId].expiration = expiration;
         _addDrugIdForPharmacy(pharmacy, drugId);
@@ -211,23 +244,27 @@ contract PrescriptionContract {
     function _addDoctorPatient(address doctor, address patient) internal {
         bool exists = false;
         address[] storage patients = doctorPatients[doctor];
-        for(uint i=0;i<patients.length;i++){
-            if(patients[i] == patient){
+        for (uint i = 0; i < patients.length; i++) {
+            if (patients[i] == patient) {
                 exists = true;
                 break;
             }
         }
-        if(!exists){
+        if (!exists) {
             patients.push(patient);
         }
     }
 
-
     // Creating Prescription and Verification
-    
+
     /// @notice create Prescription - Not writing param docs fuck you
-    function createPrescription(address patient, address recommendedPharmacy, bytes32 detailsHash, Medication[] calldata meds) external onlyDoctor{
-        if(roles[patient] != Role.Patient){
+    function createPrescription(
+        address patient,
+        address recommendedPharmacy,
+        bytes32 detailsHash,
+        Medication[] calldata meds
+    ) external onlyDoctor {
+        if (roles[patient] != Role.Patient) {
             revert NotRegistered(patient);
         }
 
@@ -242,7 +279,7 @@ contract PrescriptionContract {
         pres.accepted = false;
         pres.ordered = false;
 
-        for(uint i=0;i<meds.length;i++){
+        for (uint i = 0; i < meds.length; i++) {
             pres.medications.push(meds[i]);
             pres.orderedMedications.push(false);
         }
@@ -255,26 +292,26 @@ contract PrescriptionContract {
     }
 
     /// @notice to accept a prescription
-    function acceptPrescription(uint prescriptionId) external onlyPatient{
+    function acceptPrescription(uint prescriptionId) external onlyPatient {
         Prescription storage pres = prescriptions[prescriptionId];
 
-        if(pres.patient != msg.sender) {
+        if (pres.patient != msg.sender) {
             revert PrescriptionNotForSender(pres.patient, msg.sender);
         }
 
-        if(pres.accepted){
+        if (pres.accepted) {
             revert PrescriptionAlreadyAccepted(prescriptionId);
         }
 
-        for(uint i=0;i<pres.medications.length;i++){
+        for (uint i = 0; i < pres.medications.length; i++) {
             uint drugId = pres.medications[i].drugId;
-            if(activeDrug[msg.sender][drugId]){
+            if (activeDrug[msg.sender][drugId]) {
                 revert DrugsAlreadyActive(drugId, msg.sender);
             }
         }
 
         pres.accepted = true;
-        for (uint i=0;i<pres.medications.length;i++){
+        for (uint i = 0; i < pres.medications.length; i++) {
             uint drugId = pres.medications[i].drugId;
             activeDrug[msg.sender][drugId] = true;
             patientActiveDrugs[msg.sender].push(drugId);
@@ -283,11 +320,11 @@ contract PrescriptionContract {
         emit PrescriptionAccepted(prescriptionId, msg.sender);
     }
 
-    function _removeActiveDrug(address patient, uint drugId) internal{
+    function _removeActiveDrug(address patient, uint drugId) internal {
         uint[] storage drugs = patientActiveDrugs[patient];
-        for(uint i=0;i<drugs.length;i++){
-            if(drugs[i]==drugId){
-                drugs[i] = drugs[drugs.length-1];
+        for (uint i = 0; i < drugs.length; i++) {
+            if (drugs[i] == drugId) {
+                drugs[i] = drugs[drugs.length - 1];
                 drugs.pop();
                 break;
             }
@@ -296,36 +333,42 @@ contract PrescriptionContract {
 
     // Ordering a Prescription
 
-    function orderPrescription(uint prescriptionId, address pharmacyAddress, bytes32 /* orderHash */) external onlyPatient {
+    function orderPrescription(
+        uint prescriptionId,
+        address pharmacyAddress,
+        bytes32 /* orderHash */
+    ) external onlyPatient {
         Prescription storage pres = prescriptions[prescriptionId];
-        if(msg.sender != pres.patient){
+        if (msg.sender != pres.patient) {
             revert PrescriptionNotForSender(msg.sender, pres.patient);
         }
-        if(!pres.accepted){
+        if (!pres.accepted) {
             revert PrescriptionNotAccepted(prescriptionId);
         }
-        if(pres.ordered){
+        if (pres.ordered) {
             revert PrescriptionAlreadyOrdered(prescriptionId);
         }
-        if(roles[pharmacyAddress] != Role.Pharmacy){
+        if (roles[pharmacyAddress] != Role.Pharmacy) {
             revert NotPharmacy(uint(roles[pharmacyAddress]), pharmacyAddress);
         }
 
-        for(uint i=0;i<pres.medications.length;i++){
+        for (uint i = 0; i < pres.medications.length; i++) {
             uint drugId = pres.medications[i].drugId;
-            uint requiredAmount = pres.medications[i].dosage * pres.medications[i].no_days;
-            if(inventory[pharmacyAddress][drugId].stock < requiredAmount){
+            uint requiredAmount = pres.medications[i].dosage *
+                pres.medications[i].no_days;
+            if (inventory[pharmacyAddress][drugId].stock < requiredAmount) {
                 revert NotEnoughDrugs(pharmacyAddress, prescriptionId, drugId);
             }
         }
 
-        for(uint i=0;i<pres.medications.length;i++){
+        for (uint i = 0; i < pres.medications.length; i++) {
             uint drugId = pres.medications[i].drugId;
-            uint requiredAmount = pres.medications[i].dosage * pres.medications[i].no_days;
+            uint requiredAmount = pres.medications[i].dosage *
+                pres.medications[i].no_days;
             inventory[pharmacyAddress][drugId].stock -= requiredAmount;
             activeDrug[msg.sender][drugId] = false;
             _removeActiveDrug(msg.sender, drugId);
-            pres.orderedMedications[i]=true;
+            pres.orderedMedications[i] = true;
         }
 
         pres.ordered = true;
@@ -338,25 +381,33 @@ contract PrescriptionContract {
     /// @param pharmacyAddresses Array of pharmacy addresses to order from.
     /// @param medIndices A 2D array where each sub-array contains indices (in the prescription's medications array) to be ordered from the corresponding pharmacy.
     /// @param orderHashes Array of hashes of order details (off-chain) for each pharmacy order.
-    function orderPrescriptionMultiPharmacy(uint prescriptionId, address[] calldata pharmacyAddresses, uint[][] calldata medIndices, bytes32[] calldata orderHashes) external onlyPatient{
+    function orderPrescriptionMultiPharmacy(
+        uint prescriptionId,
+        address[] calldata pharmacyAddresses,
+        uint[][] calldata medIndices,
+        bytes32[] calldata orderHashes
+    ) external onlyPatient {
         Prescription storage pres = prescriptions[prescriptionId];
 
-        if(msg.sender != pres.patient){
+        if (msg.sender != pres.patient) {
             revert PrescriptionNotForSender(msg.sender, pres.patient);
         }
 
-        if(!pres.accepted){
+        if (!pres.accepted) {
             revert PrescriptionNotAccepted(prescriptionId);
         }
 
-        if(pharmacyAddresses.length != medIndices.length || pharmacyAddresses.length != orderHashes.length){
+        if (
+            pharmacyAddresses.length != medIndices.length ||
+            pharmacyAddresses.length != orderHashes.length
+        ) {
             revert MismatchLengths();
         }
 
         for (uint i = 0; i < pharmacyAddresses.length; i++) {
             address pharmacyAddr = pharmacyAddresses[i];
 
-            if(roles[pharmacyAddr] != Role.Pharmacy){
+            if (roles[pharmacyAddr] != Role.Pharmacy) {
                 revert NotPharmacy(uint256(roles[pharmacyAddr]), pharmacyAddr);
             }
 
@@ -365,14 +416,17 @@ contract PrescriptionContract {
             for (uint j = 0; j < indices.length; j++) {
                 uint medIndex = indices[j];
 
-                if(medIndex >= pres.medications.length) revert InvalidMedIndex(medIndex, pres.medications.length);
-                if(pres.orderedMedications[medIndex]) revert AlreadyOrdered(prescriptionId, medIndex);
+                if (medIndex >= pres.medications.length)
+                    revert InvalidMedIndex(medIndex, pres.medications.length);
+                if (pres.orderedMedications[medIndex])
+                    revert AlreadyOrdered(prescriptionId, medIndex);
 
                 uint drugId = pres.medications[medIndex].drugId;
-                uint requiredAmount = pres.medications[medIndex].dosage * pres.medications[medIndex].no_days;
+                uint requiredAmount = pres.medications[medIndex].dosage *
+                    pres.medications[medIndex].no_days;
 
-                if(inventory[pharmacyAddr][drugId].stock < requiredAmount) revert NotEnoughDrugs(pharmacyAddr, presId, drugId);
-                
+                if (inventory[pharmacyAddr][drugId].stock < requiredAmount)
+                    revert NotEnoughDrugs(pharmacyAddr, presId, drugId);
 
                 inventory[pharmacyAddr][drugId].stock -= requiredAmount;
 
@@ -405,36 +459,53 @@ contract PrescriptionContract {
     // get active drugs tick
 
     // Getter functions
-    
+
     // All are self explanatory not writing docs
 
     function getAllPharmacies() external view returns (address[] memory) {
         return pharmacies;
     }
 
-    function getPatientsOfDoctor(address doctor) external view returns (address[] memory) {
+    function getPatientsOfDoctor(
+        address doctor
+    ) external view returns (address[] memory) {
         return doctorPatients[doctor];
     }
 
-    function getPrescriptionsByDoctor(address doctor) external view returns (uint[] memory) {
+    function getPrescriptionsByDoctor(
+        address doctor
+    ) external view returns (uint[] memory) {
         return doctorPrescriptions[doctor];
     }
 
-    function getPrescriptionsByPatient(address patient) external view returns (uint[] memory) {
+    function getPrescriptionsByPatient(
+        address patient
+    ) external view returns (uint[] memory) {
         return patientPrescriptions[patient];
     }
 
     function getPharmacyById(uint id) external view returns (address) {
-        if(id >= pharmacies.length) revert InvalidPharmacyId(id, pharmacies.length);
+        if (id >= pharmacies.length)
+            revert InvalidPharmacyId(id, pharmacies.length);
         return pharmacies[id];
     }
 
-    function getInventoryForPharmacy(address pharmacyAddr) external view returns (uint[] memory drugIds, uint[] memory stocks, uint[] memory expirations) {
+    function getInventoryForPharmacy(
+        address pharmacyAddr
+    )
+        external
+        view
+        returns (
+            uint[] memory drugIds,
+            uint[] memory stocks,
+            uint[] memory expirations
+        )
+    {
         uint len = pharmacyDrugIds[pharmacyAddr].length;
         drugIds = new uint[](len);
         stocks = new uint[](len);
         expirations = new uint[](len);
-        
+
         for (uint i = 0; i < len; i++) {
             uint drugId = pharmacyDrugIds[pharmacyAddr][i];
             drugIds[i] = drugId;
@@ -443,12 +514,44 @@ contract PrescriptionContract {
         }
     }
 
-    function getActiveDrugsOfPatient(address patient) external view returns (uint[] memory) {
+    function getActiveDrugsOfPatient(
+        address patient
+    ) external view returns (uint[] memory) {
         return patientActiveDrugs[patient];
     }
 
-    function getRole(address account) external view returns(uint256){
+    function getRole(address account) external view returns (uint256) {
         return uint256(roles[account]);
     }
 
+    function getPrescriptionfromId(
+        uint256 id
+    )
+        external
+        view
+        returns (
+            address doctor,
+            address patient,
+            address recommendedPharmacy,
+            bytes32 detailsHash,
+            Medication[] memory medications,
+            bool[] memory orderedMedications,
+            uint timestamp,
+            bool accepted,
+            bool ordered
+        )
+    {
+        Prescription storage pres = prescriptions[id];
+        return (
+            pres.doctor,
+            pres.patient,
+            pres.recommendedPharmacy,
+            pres.detailsHash,
+            pres.medications,
+            pres.orderedMedications,
+            uint(pres.timestamp),
+            bool(pres.accepted),
+            bool(pres.ordered)
+        );
+    }
 }
