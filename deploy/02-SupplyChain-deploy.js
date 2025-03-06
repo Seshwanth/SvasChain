@@ -10,6 +10,13 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
     log: true,
   });
 
+  if (
+    !developmentChains.includes(network.name) &&
+    process.env.ETHERSCAN_API_KEY
+  ) {
+    await verify(supplyChain.address, args);
+  }
+
   console.log("DrugSupplyChain deployed to:", supplyChain.address);
 };
 

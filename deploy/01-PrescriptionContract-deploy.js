@@ -11,6 +11,13 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
     log: true,
   });
 
+  if (
+    !developmentChains.includes(network.name) &&
+    process.env.ETHERSCAN_API_KEY
+  ) {
+    await verify(prescriptionContract.address, args);
+  }
+
   console.log(
     "PrescriptionContract deployed to:",
     prescriptionContract.address
