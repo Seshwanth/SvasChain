@@ -7,6 +7,14 @@ import {
     CardHeader,
     CardTitle,
 } from "./card";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "./dropdown-menu";
 
 export {
     Button,
@@ -16,4 +24,10 @@ export {
     CardFooter,
     CardHeader,
     CardTitle,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
 }
