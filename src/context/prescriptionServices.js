@@ -99,6 +99,16 @@ export const updatePharmacyInventory = async (pharmacy, drugId, amount, expirati
     }
 };
 
+
+export const getInventoryForPharmacy = async (pharmacyAddr) => {
+    try {
+        return await prescriptionContract.getInventoryForPharmacy(pharmacyAddr);
+    } catch (error) {
+        console.error("Error getting inventory for pharmacy:", error);
+        throw error;
+    }
+};
+
 // Prescription Management Functions
 export const createPrescription = async (patient, recommendedPharmacy, detailsHash, medications) => {
     try {
@@ -205,14 +215,6 @@ export const getPharmacyById = async (id) => {
     }
 };
 
-export const getInventoryForPharmacy = async (pharmacyAddr) => {
-    try {
-        return await prescriptionContract.getInventoryForPharmacy(pharmacyAddr);
-    } catch (error) {
-        console.error("Error getting inventory for pharmacy:", error);
-        throw error;
-    }
-};
 
 export const getActiveDrugsOfPatient = async (patient) => {
     try {

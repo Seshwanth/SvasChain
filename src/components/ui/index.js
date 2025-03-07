@@ -46,10 +46,20 @@ import {
 } from './dialog'
 import {
     Badge,
-    BadgeContent,
-    BadgeDescription,
-    BadgeTitle,
 } from './badge'
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from './alert-dialog'
+import { Input } from "./input";
+import { Separator } from "./separator";
 
 export {
     Button,
@@ -85,7 +95,15 @@ export {
     DialogTitle,
     DialogTrigger,
     Badge,
-    BadgeContent,
-    BadgeDescription,
-    BadgeTitle,
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+    Input,
+    Separator,
 }
