@@ -21,7 +21,7 @@
 
     const handleGetStarted = () => {
       if (isConnected) {
-        router.push("/doctor");
+        router.push("/login");
       } else {
         openConnectModal();
       }
