@@ -60,6 +60,7 @@ const LoginPage = () => {
         try {
             switch (role) {
                 case "doctor":
+                    console.log("registering as doctor");
                     await registerAsDoctor();
                     toast.success("Successfully registered as Doctor");
                     break;

@@ -36,6 +36,20 @@ import {
     TabsList,
     TabsTrigger,
 } from './tabs'
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from './dialog'
+import {
+    Badge,
+    BadgeContent,
+    BadgeDescription,
+    BadgeTitle,
+} from './badge'
 
 export {
     Button,
@@ -64,4 +78,14 @@ export {
     TabsContent,
     TabsList,
     TabsTrigger,
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+    Badge,
+    BadgeContent,
+    BadgeDescription,
+    BadgeTitle,
 }

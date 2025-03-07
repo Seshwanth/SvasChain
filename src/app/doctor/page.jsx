@@ -105,16 +105,17 @@ const DoctorPage = () => {
     }
   };
 
-  const handleCreatePrescription = async (e) => {
-    e.preventDefault();
-    setLoading((prev) => ({ ...prev, create: true }));
-    try {
-      const medications = newPrescription.medications.map((med) => ({
-        drugId: parseInt(med.drugId),
-        dosage: parseInt(med.dosage),
-        no_days: parseInt(med.no_days),
-      }));
-      console.log(medications);
+    const handleCreatePrescription = async (e) => {
+        e.preventDefault()
+        setLoading(prev => ({ ...prev, create: true }))
+        try {
+            const medications = newPrescription.medications.map(med => ({
+                drugId: Number(med.drugId),
+                dosage: Number(med.dosage),
+                no_days: Number(med.no_days)
+            }))
+            console.log(medications)
+            console.log("inside create prescription")
 
       await createPrescription(
         ethers.getAddress(newPrescription.patient),

@@ -102,6 +102,10 @@ export const updatePharmacyInventory = async (pharmacy, drugId, amount, expirati
 // Prescription Management Functions
 export const createPrescription = async (patient, recommendedPharmacy, detailsHash, medications) => {
     try {
+        console.log("patient", patient);
+        console.log("recommendedPharmacy", recommendedPharmacy);
+        console.log("detailsHash", detailsHash);
+        console.log("medications", medications);
         const tx = await prescriptionContract.createPrescription(
             patient,
             recommendedPharmacy,
@@ -229,6 +233,18 @@ export const getRole = async (account) => {
         throw error;
     }
 };
+
+export const getPrescriptionfromId = async (prescriptionId) => {
+    console.log("prescriptionId", Number(prescriptionId));
+    try {
+        const prescription = await prescriptionContract.getPrescriptionfromId(Number(prescriptionId));
+        console.log("prescription", prescription);
+        return prescription;
+    } catch (error) {
+        console.error("Error getting prescription details:", error);
+        throw error;
+    }
+}
 
 // Run once
 initialize();
