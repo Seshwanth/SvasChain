@@ -12,7 +12,7 @@ The pharmaceutical industry faces critical challenges, including prescription fr
 - **Regulatory Bodies** – Gaining real-time visibility into prescription patterns.
 
 ### Approach & Innovation
-Our platform records prescriptions and drug transactions on an immutable blockchain, ensuring data integrity. Smart contracts automate prescription verification, dispensing, and inventory updates. Decentralized Identity (DID) ensures only authorized providers can issue prescriptions. Using Gen AI for automated metadata tagging, our system enhances searchability by extracting key medical terms (e.g., drug category, urgency level, patient risk) using Named Entity Recognition (NER).
+Our platform records prescriptions and drug transactions on an immutable blockchain, ensuring data integrity. Smart contracts automate prescription verification, dispensing, and inventory updates. Decentralized Identity (DID) ensures only authorized providers can issue prescriptions.
 
 ### Why Blockchain?
 - **Tamper-proof records** prevent fraud and unauthorized prescription alterations.
@@ -29,10 +29,8 @@ Integrate Solidity smart contracts to manage both prescription transactions and 
 ### Tech Stack
 - **Blockchain**: Ethereum/Polygon for smart contract execution.
 - **Smart Contracts**: Solidity for automated prescription verification.
-- **Backend**: Node.js with Express.js.
 - **Frontend**: Next.js, Tailwind CSS, Redux for a seamless user experience.
 - **Storage**: IPFS (Pinata) for non-sensitive off-chain data.
-- **Gen AI**: Google Gemini for data querying.
 
 ### Sustainability & Differentiation
 - **Decentralization**: Eliminates reliance on centralized entities, ensuring trust and security.
