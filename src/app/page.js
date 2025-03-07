@@ -2,7 +2,7 @@
 
 import RainbowKitWrapperComponent from '../context/rainbow-kit-wrapper-component'
 import { useWallet } from '../context/rainbow-kit-wrapper-component'
-
+import LandingPage from './LandingPage'
 const HomeContent = () => {
   const { walletAddress } = useWallet()
 
@@ -22,7 +22,8 @@ const HomeContent = () => {
 const HomePage = () => {
   return (
     <RainbowKitWrapperComponent>
-      <HomeContent />
+      <LandingPage />
+      {/* <HomeContent /> */}
     </RainbowKitWrapperComponent>
   )
 }
